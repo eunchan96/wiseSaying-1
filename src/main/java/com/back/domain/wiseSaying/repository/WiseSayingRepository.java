@@ -13,7 +13,7 @@ public abstract class WiseSayingRepository {
     public abstract Optional<WiseSaying> findById(int id);
 
     public void archive() {
-        String json = Util.json.toString(findAll().stream()
+        String json = Util.json.toString(findAll().reversed().stream()
                 .map(WiseSaying::toMap)
                 .toList());
 
