@@ -26,6 +26,7 @@ public class App {
                 case "목록" -> actionList();
                 case "삭제" -> actionDelete(rq);
                 case "수정" -> actionModify(rq);
+                case "빌드" -> actionArchive();
                 default -> System.out.println("알 수 없는 명령어입니다.");
             }
         }
@@ -135,5 +136,17 @@ public class App {
         Util.file.set(filePath, wiseSayingJson);
 
         System.out.println("%d번 명언이 수정되었습니다.".formatted(id));
+    }
+
+    private void actionArchive() {
+        String json = Util.json.toString(
+                Util.file.walkRegularFiles("db/wiseSaying", "\\d+\\.json")
+                        .map(path -> Util.file.get(path.toString(), ""))
+                        .map(Util.json::toMap)
+                        .toList()
+        );
+
+        Util.file.set("db/wiseSaying/data.json", json);
+        System.out.println("data.json 파일의 내용이 갱신되었습니다.");
     }
 }
