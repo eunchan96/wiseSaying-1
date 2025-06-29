@@ -6,7 +6,7 @@ import com.back.global.rq.Rq;
 import java.util.Scanner;
 
 public class App {
-    Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
     private final WiseSayingController wiseSayingController;
 
     public void run(){
@@ -33,6 +33,7 @@ public class App {
     }
 
     public App(String mode) {
+        scanner = AppContext.scanner;
         wiseSayingController = new WiseSayingController(scanner, mode);
     }
 }
