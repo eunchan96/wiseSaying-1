@@ -15,14 +15,16 @@ public class App {
         while (true) {
             System.out.print("명령) ");
             String cmd = scanner.nextLine().trim();
+            Rq rq = new Rq(cmd);
 
-            switch (cmd) {
+            switch (rq.getActionName()) {
                 case "종료" -> {
                     System.out.println("프로그램을 종료합니다.");
                     return;
                 }
                 case "등록" -> actionWrite();
                 case "목록" -> actionList();
+                case "삭제" -> actionDelete(rq);
                 default -> System.out.println("알 수 없는 명령어입니다.");
             }
         }
@@ -46,5 +48,17 @@ public class App {
         for (WiseSaying wiseSaying : wiseSayings.reversed()) {
             System.out.println(wiseSaying);
         }
+    }
+
+    private void actionDelete(Rq rq) {
+        int id = rq.getParamInt("id", -1);
+
+        if (id == -1) {
+            System.out.println("잘못된 명령어입니다.");
+            return;
+        }
+
+        wiseSayings.remove(id-1);
+        System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
     }
 }
