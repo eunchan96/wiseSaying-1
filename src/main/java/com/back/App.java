@@ -17,8 +17,16 @@ public class App {
                     System.out.println("프로그램을 종료합니다.");
                     return;
                 }
+                case "등록" -> actionWrite();
                 default -> System.out.println("알 수 없는 명령어입니다.");
             }
         }
+    }
+
+    private void actionWrite() {
+        System.out.print("명언 : ");
+        String wiseSaying = scanner.nextLine().trim();
+        System.out.print("작가 : ");
+        String author = scanner.nextLine().trim();
     }
 }
