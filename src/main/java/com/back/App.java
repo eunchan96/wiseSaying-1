@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 public class App {
     Scanner scanner = new Scanner(System.in);
+    private int lastId = 0;
 
     public void run(){
         System.out.println("== 명언 앱 ==");
@@ -29,6 +30,6 @@ public class App {
         System.out.print("작가 : ");
         String author = scanner.nextLine().trim();
 
-        System.out.println("%d번 명언이 등록되었습니다.".formatted(1));
+        System.out.println("%d번 명언이 등록되었습니다.".formatted(++lastId));
     }
 }
