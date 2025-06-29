@@ -54,11 +54,21 @@ public class App {
         int id = rq.getParamInt("id", -1);
 
         if (id == -1) {
-            System.out.println("잘못된 명령어입니다.");
+            System.out.println("id를 정확히 입력해주세요.");
             return;
         }
 
-        wiseSayings.remove(id-1);
+        WiseSaying wiseSaying = wiseSayings.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (wiseSaying == null){
+            System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
+            return;
+        }
+
+        wiseSayings.remove(wiseSaying);
         System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
     }
 }
