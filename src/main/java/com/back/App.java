@@ -25,6 +25,7 @@ public class App {
                 case "등록" -> actionWrite();
                 case "목록" -> actionList();
                 case "삭제" -> actionDelete(rq);
+                case "수정" -> actionModify(rq);
                 default -> System.out.println("알 수 없는 명령어입니다.");
             }
         }
@@ -70,5 +71,36 @@ public class App {
 
         wiseSayings.remove(wiseSaying);
         System.out.println("%d번 명언이 삭제되었습니다.".formatted(id));
+    }
+
+    private void actionModify(Rq rq) {
+        int id = rq.getParamInt("id", -1);
+
+        if (id == -1) {
+            System.out.println("id를 정확히 입력해주세요.");
+            return;
+        }
+
+        WiseSaying wiseSaying = wiseSayings.stream()
+                .filter(e -> e.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        if (wiseSaying == null) {
+            System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
+            return;
+        }
+
+        System.out.println("명언(기존) : %s".formatted(wiseSaying.getContent()));
+        System.out.print("명언 : ");
+        String content = scanner.nextLine().trim();
+        System.out.println("작가(기존) : %s".formatted(wiseSaying.getAuthor()));
+        System.out.print("작가 : ");
+        String author = scanner.nextLine().trim();
+
+        wiseSaying.setContent(content);
+        wiseSaying.setAuthor(author);
+
+        System.out.println("%d번 명언이 수정되었습니다.".formatted(id));
     }
 }
