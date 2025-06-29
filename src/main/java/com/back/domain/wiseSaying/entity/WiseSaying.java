@@ -1,6 +1,5 @@
-package com.back;
+package com.back.domain.wiseSaying.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,11 +8,15 @@ import java.util.Map;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class WiseSaying {
     private int id;
     private String content;
     private String author;
+
+    public WiseSaying(String content, String author) {
+        this.content = content;
+        this.author = author;
+    }
 
     @Override
     public String toString() {

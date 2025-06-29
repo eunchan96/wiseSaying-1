@@ -1,4 +1,4 @@
-package com.back;
+package com.back.global.rq;
 
 import java.util.Arrays;
 import java.util.Map;
