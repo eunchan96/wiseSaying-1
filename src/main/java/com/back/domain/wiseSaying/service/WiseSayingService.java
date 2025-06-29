@@ -4,7 +4,6 @@ import com.back.domain.wiseSaying.entity.WiseSaying;
 import com.back.domain.wiseSaying.repository.WiseSayingFileRepository;
 import com.back.domain.wiseSaying.repository.WiseSayingMemoryRepository;
 import com.back.domain.wiseSaying.repository.WiseSayingRepository;
-import com.back.standard.util.Util;
 
 import java.util.List;
 import java.util.Optional;
@@ -44,10 +43,6 @@ public class WiseSayingService {
     }
 
     public void archive() {
-        String json = Util.json.toString(findAll().stream()
-                .map(WiseSaying::toMap)
-                .toList());
-
-        Util.file.set("db/wiseSaying/data.json", json);
+        wiseSayingRepository.archive();
     }
 }
