@@ -1,12 +1,10 @@
 package com.back;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class App {
     Scanner scanner = new Scanner(System.in);
-    private int lastId = 0;
+//    private int lastId = 0;
 //    private final List<WiseSaying> wiseSayings = new ArrayList<>();
 
     public void run(){
@@ -38,13 +36,11 @@ public class App {
         System.out.print("작가 : ");
         String author = scanner.nextLine().trim();
 
-        WiseSaying wiseSaying = new WiseSaying(++lastId, content, author);
-//        wiseSayings.add(wiseSaying);
+        int lastId = Integer.parseInt(Util.file.get("db/wiseSaying/lastId.txt", "0"));
 
-        Map<String, Object> wiseSayingMap = wiseSaying.toMap();
-        String wiseSayingJson = Util.json.toString(wiseSayingMap);
-        Util.file.set("db/wiseSaying/%d.json".formatted(wiseSaying.getId()), wiseSayingJson);
-        Util.file.set("db/wiseSaying/lastId.txt", String.valueOf(lastId));
+        WiseSaying wiseSaying = new WiseSaying(++lastId, content, author);
+//        listWrite(wiseSaying);
+        fileWrite(wiseSaying);
 
         System.out.println("%d번 명언이 등록되었습니다.".formatted(wiseSaying.getId()));
     }
@@ -53,11 +49,7 @@ public class App {
         System.out.println("번호 / 작가 / 명언");
         System.out.println("----------------------");
 
-        List<WiseSaying> wiseSayings = Util.file.walkRegularFiles("db/wiseSaying", "\\d+\\.json")
-                .map(path -> Util.file.get(path.toString(), ""))
-                .map(Util.json::toMap)
-                .map(WiseSaying::new)
-                .toList();
+        List<WiseSaying> wiseSayings = findAll();
 
         for (WiseSaying wiseSaying : wiseSayings.reversed()) {
             System.out.println(wiseSaying);
@@ -72,10 +64,7 @@ public class App {
             return;
         }
 
-//        WiseSaying wiseSaying = wiseSayings.stream()
-//                .filter(e -> e.getId() == id)
-//                .findFirst()
-//                .orElse(null);
+//        WiseSaying wiseSaying = findById(id).orElse(null);
 //
 //        if (wiseSaying == null){
 //            System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
@@ -102,10 +91,7 @@ public class App {
             return;
         }
 
-//        WiseSaying wiseSaying = wiseSayings.stream()
-//                .filter(e -> e.getId() == id)
-//                .findFirst()
-//                .orElse(null);
+//        WiseSaying wiseSaying = findById(id).orElse(null);
 //
 //        if (wiseSaying == null) {
 //            System.out.println("%d번 명언은 존재하지 않습니다.".formatted(id));
@@ -128,25 +114,55 @@ public class App {
         System.out.print("작가 : ");
         String author = scanner.nextLine().trim();
 
-        wiseSaying.setContent(content);
-        wiseSaying.setAuthor(author);
-
-        wiseSayingMap = wiseSaying.toMap();
-        wiseSayingJson = Util.json.toString(wiseSayingMap);
-        Util.file.set(filePath, wiseSayingJson);
+//        modify(wiseSaying, content, author);
+        fileModify(wiseSaying, content, author, filePath);
 
         System.out.println("%d번 명언이 수정되었습니다.".formatted(id));
     }
 
     private void actionArchive() {
-        String json = Util.json.toString(
-                Util.file.walkRegularFiles("db/wiseSaying", "\\d+\\.json")
-                        .map(path -> Util.file.get(path.toString(), ""))
-                        .map(Util.json::toMap)
-                        .toList()
-        );
+        String json = Util.json.toString(findAll().stream()
+                .map(WiseSaying::toMap)
+                .toList());
 
         Util.file.set("db/wiseSaying/data.json", json);
         System.out.println("data.json 파일의 내용이 갱신되었습니다.");
+    }
+
+//    private void listWrite(WiseSaying wiseSaying) {
+//        wiseSayings.add(wiseSaying);
+//    }
+
+    private void fileWrite(WiseSaying wiseSaying) {
+        String filePath = "db/wiseSaying/%d.json".formatted(wiseSaying.getId());
+        String wiseSayingJson = Util.json.toString(wiseSaying.toMap());
+        Util.file.set(filePath, wiseSayingJson);
+        Util.file.set("db/wiseSaying/lastId.txt", String.valueOf(wiseSaying.getId()));
+    }
+
+    private List<WiseSaying> findAll() {
+        return Util.file.walkRegularFiles("db/wiseSaying", "\\d+\\.json")
+                .map(path -> Util.file.get(path.toString(), ""))
+                .map(Util.json::toMap)
+                .map(WiseSaying::new)
+                .toList();
+    }
+
+//    private Optional<WiseSaying> findById(int id) {
+//        return findAll().stream()
+//                .filter(wiseSaying -> wiseSaying.getId() == id)
+//                .findFirst();
+//    }
+
+    private void modify(WiseSaying wiseSaying, String content, String author) {
+        wiseSaying.setContent(content);
+        wiseSaying.setAuthor(author);
+    }
+
+    private void fileModify(WiseSaying wiseSaying, String content, String author, String filePath) {
+        modify(wiseSaying, content, author);
+
+        String wiseSayingJson = Util.json.toString(wiseSaying.toMap());
+        Util.file.set(filePath, wiseSayingJson);
     }
 }
