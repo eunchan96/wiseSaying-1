@@ -1,5 +1,6 @@
 package com.back;
 
+import com.back.domain.system.controller.SystemController;
 import com.back.domain.wiseSaying.controller.WiseSayingController;
 import com.back.global.rq.Rq;
 
@@ -8,6 +9,7 @@ import java.util.Scanner;
 public class App {
     private final Scanner scanner;
     private final WiseSayingController wiseSayingController;
+    private final SystemController systemController;
 
     public void run(){
         System.out.println("== 명언 앱 ==");
@@ -19,7 +21,7 @@ public class App {
 
             switch (rq.getActionName()) {
                 case "종료" -> {
-                    System.out.println("프로그램을 종료합니다.");
+                    systemController.actionExit();
                     return;
                 }
                 case "등록" -> wiseSayingController.actionWrite();
@@ -35,5 +37,6 @@ public class App {
     public App(String mode) {
         scanner = AppContext.scanner;
         wiseSayingController = new WiseSayingController(scanner, mode);
+        systemController = new SystemController();
     }
 }

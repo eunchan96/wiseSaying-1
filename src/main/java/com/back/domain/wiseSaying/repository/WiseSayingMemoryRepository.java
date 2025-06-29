@@ -19,13 +19,6 @@ public class WiseSayingMemoryRepository extends WiseSayingRepository{
     }
 
     @Override
-    public Optional<WiseSaying> findById(int id) {
-        return wiseSayings.stream()
-                .filter(wiseSaying -> wiseSaying.getId() == id)
-                .findFirst();
-    }
-
-    @Override
     public boolean delete(int id){
         WiseSaying wiseSaying = findById(id).orElse(null);
         return wiseSayings.remove(wiseSaying);
@@ -34,5 +27,12 @@ public class WiseSayingMemoryRepository extends WiseSayingRepository{
     @Override
     public List<WiseSaying> findAll() {
         return wiseSayings.reversed();
+    }
+
+    @Override
+    public Optional<WiseSaying> findById(int id) {
+        return wiseSayings.stream()
+                .filter(wiseSaying -> wiseSaying.getId() == id)
+                .findFirst();
     }
 }

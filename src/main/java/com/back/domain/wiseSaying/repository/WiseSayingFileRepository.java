@@ -20,8 +20,11 @@ public class WiseSayingFileRepository extends WiseSayingRepository {
         Util.file.set(filePath, wiseSayingJson);
     }
 
-    private int getLastID(){
-        return Integer.parseInt(Util.file.get("db/wiseSaying/lastId.txt", "0"));
+    @Override
+    public boolean delete(int id) {
+        String filePath = "db/wiseSaying/%d.json".formatted(id);
+
+        return Util.file.delete(filePath);
     }
 
     @Override
@@ -35,13 +38,6 @@ public class WiseSayingFileRepository extends WiseSayingRepository {
     }
 
     @Override
-    public boolean delete(int id) {
-        String filePath = "db/wiseSaying/%d.json".formatted(id);
-
-        return Util.file.delete(filePath);
-    }
-
-    @Override
     public Optional<WiseSaying> findById(int id) {
         String filePath = "db/wiseSaying/%d.json".formatted(id);
 
@@ -51,5 +47,9 @@ public class WiseSayingFileRepository extends WiseSayingRepository {
         }
         WiseSaying wiseSaying = new WiseSaying(Util.json.toMap(wiseSayingJson));
         return Optional.of(wiseSaying);
+    }
+
+    private int getLastID(){
+        return Integer.parseInt(Util.file.get("db/wiseSaying/lastId.txt", "0"));
     }
 }
